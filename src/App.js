@@ -10,17 +10,63 @@ const defaultTodos = [
   { text: `Tomar el curso de Introduccion a React.js`, completed: false},
   { text: `Llorar con la llorona`, completed: false},
   { text: `Going going going`, completed: false},
+  { text: `Usar estados derivados`, completed: true},
 ];
 
 function App() {
+  const [todos, setTodos]= React.useState(defaultTodos);
+  const [searchValue, setSearchValue] = React.useState('');
+  console.log('Los usuarios buscan TODOs de '+searchValue);
+
+  const completedTodos = todos.filter(todo => !!todo.completed).length;
+  const totalTodos = todos.length;
+
+  const searchedTodos = todos.filter(
+    (todo) =>{
+      const todoText = todo.text.toLowerCase();
+      const searchText = searchValue.toLowerCase(); 
+      return todoText.includes(searchText);
+    }
+  );
+
+  const completeTodo =(text)=>{
+    const newTodos =[...todos];
+    const todoIndex = newTodos.findIndex(
+      (todo) => todo.text == text
+    );
+    newTodos[todoIndex].completed = true;
+    setTodos(newTodos);
+  }
+
+  const deleteTodo =(text)=>{
+    const newTodos =[...todos];
+    const todoIndex = newTodos.findIndex(
+      (todo) => todo.text == text
+    );
+    newTodos.splice(todoIndex, 1);
+    setTodos(newTodos);
+  }
+
   return (
     <React.Fragment>
-      <TodoCounter completed={16} total={25}/>
-      <TodoSearch/>
+      <TodoCounter 
+        completed={completedTodos} 
+        total={totalTodos}/>
+      <TodoSearch
+        searchValue={searchValue}
+        setSearchValue={setSearchValue}
+      />
 
       <TodoList>
-        {defaultTodos.map(todo => (
-          <TodoItem key={todo.text} text={todo.text} completed={todo.completed}/>
+        {searchedTodos.map(todo => (
+          <TodoItem 
+            key={todo.text} 
+            text={todo.text} 
+            completed={todo.completed}
+            onComplete={()=>completeTodo(todo.text)}
+            onDelete={()=>deleteTodo(todo.text)}
+            
+          />
         ))}
       </TodoList>
 
