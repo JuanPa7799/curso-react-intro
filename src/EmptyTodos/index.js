@@ -4,7 +4,7 @@ import React from 'react'
 function EmptyTodos() {
 
   return (
-    <p>Crera tu primer TODO!!</p>
+    <p>Crear tu primer TODO!!</p>
   )
 }
 
